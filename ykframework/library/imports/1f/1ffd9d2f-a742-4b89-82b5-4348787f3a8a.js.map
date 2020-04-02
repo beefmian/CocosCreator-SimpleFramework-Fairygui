@@ -1,0 +1,1 @@
+{"version":3,"sources":["assets\\YK\\example\\statemechine\\StateMechineTest.ts"],"names":[],"mappings":";;;;;AAAA;IAAA;IAGA,CAAC;IAFU,qBAAI,GAAX;IACA,CAAC;IACL,uBAAC;AAAD,CAHA,AAGC,IAAA;AAHY,4CAAgB","file":"","sourceRoot":"/","sourcesContent":["export class StateMechineTest {\r\n    static test() {\r\n    }\r\n}"]}

@@ -1,0 +1,1 @@
+{"version":3,"sources":["assets\\YK\\core\\ui\\UIConfig.ts"],"names":[],"mappings":";;;;;AAAA;IAAA;IAEA,CAAC;IADiB,oBAAW,GAAG,EAAE,CAAC;IACnC,eAAC;CAFD,AAEC,IAAA;AAFY,4BAAQ","file":"","sourceRoot":"/","sourcesContent":["export class UIConfig {\r\n    public static packRootUrl = \"\";\r\n}"]}

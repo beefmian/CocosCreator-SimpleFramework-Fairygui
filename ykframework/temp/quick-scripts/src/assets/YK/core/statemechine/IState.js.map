@@ -1,0 +1,1 @@
+{"version":3,"sources":["assets\\YK\\core\\statemechine\\IState.ts"],"names":[],"mappings":"","file":"","sourceRoot":"/","sourcesContent":["export interface IState {\r\n    stateId: number\r\n\r\n    onEnter(prevState: IState, param: any): void\r\n\r\n    onExit(nextState: IState, param: any): void\r\n\r\n    onUpdate()\r\n}"]}

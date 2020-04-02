@@ -1,0 +1,21 @@
+{
+	"atlasSetting":{
+		"paging":true,
+		"sizeOption":"pot",
+		"trimImage":true
+	},
+	"binaryFormat":true,
+	"codeGeneration":{
+		"classNamePrefix":"UI_",
+		"codePath":null,
+		"codeType":"",
+		"getMemberByName":false,
+		"ignoreNoname":false,
+		"memberNamePrefix":"m_",
+		"packageName":null
+	},
+	"compressDesc":false,
+	"fileExtension":"bin",
+	"packageCount":2,
+	"path":"F:\\Creator\\CocosCreator-SimpleFramework-Fairygui\\assets\\resources\\fgui"
+}
