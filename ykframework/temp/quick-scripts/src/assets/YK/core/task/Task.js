@@ -58,13 +58,11 @@ var Task = /** @class */ (function () {
         this.onFinish = callback;
         return this;
     };
-    Task.prototype.execute = function (owner, callback) {
+    Task.prototype.execute = function (owner) {
         if (owner === void 0) { owner = null; }
-        if (callback === void 0) { callback = null; }
         this.mProgress = 0;
-        this.onFinish = callback;
         if (!this.isRunning) {
-            TimeDelay_1.TimeDelay.instance.AddUpdate(this.update, this, [owner]);
+            TimeDelay_1.TimeDelay.instance.addUpdate(this.update, this, [owner]);
         }
     };
     Task.prototype.tick = function (owner) {
@@ -92,6 +90,7 @@ var Task = /** @class */ (function () {
             if (this.onFinish != null) {
                 this.onFinish.run([this.status == Status.Success]);
             }
+            TimeDelay_1.TimeDelay.instance.removeUpdate(this.update, this);
         }
     };
     Task.prototype.endAction = function (success) {
@@ -103,12 +102,14 @@ var Task = /** @class */ (function () {
         this.latch = true;
         this.mStatus = success ? Status.Success : Status.Failure;
         this.mProgress = this.mStatus == Status.Success ? 1 : 0;
-        TimeDelay_1.TimeDelay.instance.RemoveUpdate(this.update, this);
         this.onStop();
     };
     Task.prototype.reset = function () {
+        this.latch = false;
         this.mStatus = Status.None;
+        TimeDelay_1.TimeDelay.instance.removeUpdate(this.update, this);
         this.onReset();
+        this.onForcedStop();
     };
     Task.prototype.onExecute = function () {
     };

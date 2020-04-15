@@ -12,7 +12,7 @@ var GameFlag = /** @class */ (function () {
         this.mValue = 0;
         this.mValue = flag;
     }
-    Object.defineProperty(GameFlag.prototype, "Value", {
+    Object.defineProperty(GameFlag.prototype, "value", {
         get: function () {
             return this.mValue;
         },
@@ -22,15 +22,17 @@ var GameFlag = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    GameFlag.prototype.Add = function (flag) {
-        this.mValue |= flag;
+    GameFlag.prototype.add = function (flag) {
+        if (!this.has(flag))
+            this.mValue |= flag;
         return this;
     };
-    GameFlag.prototype.Remove = function (flag) {
-        this.mValue &= ~flag;
+    GameFlag.prototype.remove = function (flag) {
+        if (this.has(flag))
+            this.mValue &= ~flag;
         return this;
     };
-    GameFlag.prototype.Has = function (flag) {
+    GameFlag.prototype.has = function (flag) {
         return (this.mValue & flag) != 0;
     };
     return GameFlag;

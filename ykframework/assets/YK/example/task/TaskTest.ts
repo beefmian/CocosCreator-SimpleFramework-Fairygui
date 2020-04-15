@@ -9,12 +9,13 @@ class LogTask extends YK.Task {
 
     protected onExecute() {
         super.onExecute();
-        YK.TimeDelay.instance.Add(1, 1, () => {
+        YK.TimeDelay.instance.add(1, 1, () => {
             this.endAction(true);
         }, this);
         console.log(Date.now(), this.log);
     }
 }
+
 export class TaskTest {
     static test() {
         console.log("开始任务系统测试")

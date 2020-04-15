@@ -22,28 +22,33 @@ export default class NewClass extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad () {
+    onLoad() {
         fgui.addLoadHandler();
         fgui.GRoot.create();
     }
 
     start() {
-        //TimeDelay.instance.AddUpdate(this.testupdate, this, ["nmsl"]);
-        //YK.TimeDelay.instance.Add(1, 2, this.timers, this, ['caonibaba']);
-        // example.TaskTest.test();
-        example.ResMgrTest.test();
-        //example.SceneTest.test();
+        // YK.TimeDelay.instance.addUpdate(this.testupdate, this, "args1", "args2", "args3");
+        // YK.TimeDelay.instance.add(1, 2, this.timers, this, 'args1', 'args2');
+        //example.TaskTest.test();
+        //example.ResMgrTest.test();
+        example.SceneTest.test();
         //example.EventTest.test();
         //example.TestUI.test();
-    } 
+    }
 
     // update (dt) {}
 
-    private testupdate(args: any) {
-        console.log("on update = ", args);
+    private update_count = 10;
+    private testupdate(args1: any, args2: any, args3: any) {
+        console.log("on update11 = ", args1, args2, args3);
+        this.update_count--;
+        if (this.update_count < 0) {
+            YK.TimeDelay.instance.removeUpdate(this.testupdate, this);
+        }
     }
 
-    private timers(args: any) {
-        console.log("on timers = ", args);
+    private timers(args1: any, args2: any) {
+        console.log("on timers = ", args1, args2);
     }
 }

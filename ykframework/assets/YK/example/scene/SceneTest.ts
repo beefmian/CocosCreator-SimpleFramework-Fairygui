@@ -8,7 +8,7 @@ export class SceneTest {
         YK.Scene.add(new Scene2());
 
         YK.Scene.go(1, "测试1");
-        YK.TimeDelay.instance.Add(1, 1, () => {
+        YK.TimeDelay.instance.add(1, 1, () => {
             YK.Scene.go(Scene2.id, "测试2");
         }, this);
     }

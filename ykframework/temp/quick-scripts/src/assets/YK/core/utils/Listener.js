@@ -4,23 +4,33 @@ cc._RF.push(module, '040c0t2iMpGEpEm8xzOnh7K', 'Listener');
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Func = /** @class */ (function () {
-    function Func(func, thisObj, args) {
-        if (args === void 0) { args = null; }
+    function Func(func, thisObj) {
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
         this.func = func;
         this.thisObj = thisObj;
         this.args = args;
     }
-    Func.create = function (func, thisObj, args) {
-        if (args === void 0) { args = null; }
-        var f = new Func(func, thisObj, args);
+    Func.create = function (func, thisObj) {
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
+        var f = new (Func.bind.apply(Func, [void 0, func, thisObj].concat(args)))();
         return f;
     };
-    Func.prototype.run = function (args) {
-        if (args === void 0) { args = null; }
-        if (args == null) {
+    Func.prototype.run = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        var _a;
+        if (args == null || args.length < 1) {
             args = this.args;
         }
-        return this.func.call(this.thisObj, args);
+        return (_a = this.func).call.apply(_a, [this.thisObj].concat(args));
     };
     return Func;
 }());
@@ -35,11 +45,14 @@ var Listener = /** @class */ (function () {
         listener.add(func, thisObj);
         return listener;
     };
-    Listener.prototype.add = function (func, thisObj, args) {
+    Listener.prototype.add = function (func, thisObj) {
         if (thisObj === void 0) { thisObj = null; }
-        if (args === void 0) { args = null; }
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
         if (!this.has(func, thisObj)) {
-            this.func.push(new Func(func, thisObj, args));
+            this.func.push(new (Func.bind.apply(Func, [void 0, func, thisObj].concat(args)))());
         }
     };
     Listener.prototype.remove = function (func, thisObj) {
@@ -61,11 +74,14 @@ var Listener = /** @class */ (function () {
         }
         return false;
     };
-    Listener.prototype.run = function (args) {
-        if (args === void 0) { args = null; }
+    Listener.prototype.run = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
         for (var i = 0; i < this.func.length; i++) {
             var func = this.func[i];
-            func.run(args);
+            func.run.apply(func, args);
         }
     };
     return Listener;

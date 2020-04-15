@@ -10,12 +10,12 @@ export enum Status {
 
 export abstract class Task {
     private latch: boolean;
-    private mStatus: Status = Status.None;
+    protected mStatus: Status = Status.None;
     protected mErr = "";
     protected mProgress: number;
     protected mOwnerSystem: any;
     protected mStartedTime: number;
-    protected onFinish: Func;
+    public onFinish: Func;
 
     public get progress(): number {
         return this.mProgress;
@@ -49,11 +49,10 @@ export abstract class Task {
         return this;
     }
 
-    public execute(owner: any = null, callback: Func = null) {
+    public execute(owner: any = null) {
         this.mProgress = 0;
-        this.onFinish = callback;
         if (!this.isRunning) {
-            TimeDelay.instance.AddUpdate(this.update, this, [owner])
+            TimeDelay.instance.addUpdate(this.update, this, [owner])
         }
     }
 
@@ -83,6 +82,7 @@ export abstract class Task {
             if (this.onFinish != null){
                 this.onFinish.run([this.status == Status.Success]);
             }
+            TimeDelay.instance.removeUpdate(this.update, this);
         }
     }
 
@@ -94,13 +94,16 @@ export abstract class Task {
         this.latch = true;
         this.mStatus = success ? Status.Success : Status.Failure;
         this.mProgress = this.mStatus == Status.Success ? 1 : 0;
-        TimeDelay.instance.RemoveUpdate(this.update, this);
+
         this.onStop();
     }
 
     public reset() {
+        this.latch = false
         this.mStatus = Status.None;
+        TimeDelay.instance.removeUpdate(this.update, this);
         this.onReset();
+        this.onForcedStop();
     }
 
     protected onExecute() {

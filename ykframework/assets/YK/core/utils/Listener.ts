@@ -1,13 +1,13 @@
 export class Func {
 
-    constructor(func, thisObj, args = null) {
+    constructor(func, thisObj, ...args: any) {
         this.func = func;
         this.thisObj = thisObj;
         this.args = args
     }
 
-    static create(func, thisObj, args = null): Func {
-        let f = new Func(func, thisObj, args);
+    static create(func, thisObj, ...args: any): Func {
+        let f = new Func(func, thisObj, ...args);
         return f;
     }
 
@@ -15,11 +15,11 @@ export class Func {
     public func: Function;
     public readonly thisObj: any;
 
-    run(args: any[] = null) {
-        if (args == null) {
+    run(...args: any) {
+        if (args == null || args.length < 1) {
             args = this.args;
         }
-        return this.func.call(this.thisObj, args);
+        return this.func.call(this.thisObj, ...args);
     }
 }
 
@@ -32,9 +32,9 @@ export class Listener {
         return listener;
     }
 
-    add(func, thisObj = null, args = null) {
+    add(func, thisObj = null, ...args: any) {
         if (!this.has(func, thisObj)) {
-            this.func.push(new Func(func, thisObj, args));
+            this.func.push(new Func(func, thisObj, ...args));
         }
     }
 
@@ -59,10 +59,10 @@ export class Listener {
     }
 
 
-    run(args: any[] = null) {
+    run(...args: any) {
         for (let i = 0; i < this.func.length; i++) {
             let func: Func = this.func[i];
-            func.run(args)
+            func.run(...args)
         }
     }
 }

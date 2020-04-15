@@ -66,10 +66,8 @@ var ResMgr = /** @class */ (function () {
         var _this = this;
         var urls = new Array();
         loads.needLoad.forEach(function (element) {
-            //urls.push({ url: element.url, type: element.type })
             urls.push(element.url);
         });
-        console.log("urls=", urls);
         cc.loader.loadResArray(urls, function (completedCount, totalCount, item) {
             loads.Progress = completedCount / totalCount * 100;
             if (loads.loadItem != null) {

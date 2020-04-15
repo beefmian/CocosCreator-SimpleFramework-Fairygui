@@ -25,7 +25,11 @@ var TaskList = /** @class */ (function (_super) {
             for (var i = 0; i < this.actions.length; i++) {
                 cur += this.actions[i].progress;
             }
-            return cur / this.actions.length;
+            var v = cur / this.actions.length;
+            v = isNaN(v) ? 0 : v;
+            if (this.actions.length == 0)
+                v = 1;
+            return v;
         },
         enumerable: true,
         configurable: true
@@ -58,10 +62,15 @@ var TaskList = /** @class */ (function (_super) {
             if (status == Task_1.Status.Failure) {
                 this_1.mErr = this_1.actions[i].errInfo;
                 this_1.endAction(false);
+                if (this_1.actions[i].onFinish != null)
+                    this_1.actions[i].onFinish.run(true);
                 return { value: void 0 };
             }
-            if (status == Task_1.Status.Success)
+            if (status == Task_1.Status.Success) {
                 this_1.finished.push(i);
+                if (this_1.actions[i].onFinish != null)
+                    this_1.actions[i].onFinish.run(true);
+            }
         };
         var this_1 = this;
         for (var i = 0; i < this.actions.length; i++) {
@@ -77,11 +86,17 @@ var TaskList = /** @class */ (function (_super) {
             var status = this.actions[i].tick(this.mOwnerSystem);
             if (status == Task_1.Status.Failure) {
                 this.endAction(false);
+                if (this.actions[i].onFinish != null)
+                    this.actions[i].onFinish.run(false);
                 return;
             }
             if (status == Task_1.Status.Running) {
                 this.mCurIndex = i;
                 return;
+            }
+            else {
+                if (this.actions[i].onFinish != null)
+                    this.actions[i].onFinish.run(true);
             }
         }
         this.endAction();
@@ -96,6 +111,11 @@ var TaskList = /** @class */ (function (_super) {
     TaskList.prototype.addTask = function (task) {
         this.actions.push(task);
         return this;
+    };
+    TaskList.prototype.clear = function () {
+        this.reset();
+        this.onForcedStop();
+        this.actions.splice(0, this.actions.length);
     };
     return TaskList;
 }(Task_1.Task));

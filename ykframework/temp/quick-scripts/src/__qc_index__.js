@@ -11,6 +11,7 @@ require('./assets/YK/core/task/TaskList');
 require('./assets/YK/core/ui/UIConfig');
 require('./assets/YK/core/ui/UIWind');
 require('./assets/YK/core/utils/GameFlag');
+require('./assets/YK/core/utils/GameUtils');
 require('./assets/YK/core/utils/Listener');
 require('./assets/YK/core/utils/TimeDelay');
 require('./assets/YK/example/event/EventTest');

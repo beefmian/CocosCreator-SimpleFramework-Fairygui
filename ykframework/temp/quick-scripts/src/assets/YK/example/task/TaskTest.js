@@ -14,8 +14,7 @@ var LogTask = /** @class */ (function (_super) {
     LogTask.prototype.onExecute = function () {
         var _this = this;
         _super.prototype.onExecute.call(this);
-        //YK.Timer
-        YK.TimeDelay.instance.Add(1, 1, function () {
+        YK.TimeDelay.instance.add(1, 1, function () {
             _this.endAction(true);
         }, this);
         console.log(Date.now(), this.log);

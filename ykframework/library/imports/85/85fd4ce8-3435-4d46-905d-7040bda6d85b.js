@@ -13,12 +13,9 @@ var SceneTest = /** @class */ (function () {
         YK.Scene.add(new Scene_1.Scene1());
         YK.Scene.add(new Scene_1.Scene2());
         YK.Scene.go(1, "测试1");
-        YK.TimeDelay.instance.Add(1, 1, function () {
+        YK.TimeDelay.instance.add(1, 1, function () {
             YK.Scene.go(Scene_1.Scene2.id, "测试2");
         }, this);
-        // Laya.timer.once(1000, this, () => {
-        //     YK.Scene.go(Scene2.id, "测试2");
-        // });
     };
     return SceneTest;
 }());

@@ -67,10 +67,8 @@ export class ResMgr {
 
         let urls: Array<any> = new Array<any>();
         loads.needLoad.forEach(element => {
-            //urls.push({ url: element.url, type: element.type })
             urls.push(element.url)
         });
-        console.log("urls=",urls)
         cc.loader.loadResArray(urls, (completedCount: number, totalCount: number, item: cc.Asset) => {
             loads.Progress = completedCount / totalCount * 100
             if (loads.loadItem != null) {

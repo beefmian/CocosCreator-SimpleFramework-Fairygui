@@ -28,7 +28,7 @@ var SceneMgr = /** @class */ (function () {
         this.mSceneStateMachine.removeState(sceneId);
     };
     SceneMgr.init = function () {
-        TimeDelay_1.TimeDelay.instance.AddUpdate(this.onUpdate, this);
+        TimeDelay_1.TimeDelay.instance.addUpdate(this.onUpdate, this);
     };
     SceneMgr.onUpdate = function () {
         this.mSceneStateMachine.update();
@@ -38,8 +38,14 @@ var SceneMgr = /** @class */ (function () {
 }());
 var Scene = /** @class */ (function () {
     function Scene() {
+        var _this = this;
         this.mSceneTask = new TaskList_1.TaskList(TaskList_1.ActionsExecutionMode.RunInParallel);
-        this.mSceneTask.setComplete(Listener_1.Func.create(this.onTaskFinish, this));
+        this.mSequenceTask = null;
+        this.mParallelTask = null;
+        this.mSceneTask.setComplete(Listener_1.Func.create(function () {
+            _this.onTaskFinish();
+            _this.mSceneTask.actions.splice(0, _this.mSceneTask.actions.length);
+        }, this));
     }
     Scene.init = function () {
         SceneMgr.init();
@@ -70,8 +76,28 @@ var Scene = /** @class */ (function () {
         this.mSceneTask.endAction(false);
         this.onLeaveScene(nextState, param);
     };
-    Scene.prototype.addSceneTask = function (task) {
-        this.mSceneTask.addTask(task);
+    Scene.prototype.addSceneTask = function (task, executionMode) {
+        if (executionMode === void 0) { executionMode = TaskList_1.ActionsExecutionMode.RunInSequence; }
+        if (executionMode == TaskList_1.ActionsExecutionMode.RunInParallel) {
+            if (this.mParallelTask != null) {
+                this.mParallelTask.addTask(task);
+            }
+            else {
+                this.mParallelTask = new TaskList_1.TaskList(executionMode);
+                this.mParallelTask.addTask(task);
+                this.mParallelTask.addTask(this.mSequenceTask);
+            }
+        }
+        else {
+            if (this.mSequenceTask != null) {
+                this.mSequenceTask.addTask(task);
+            }
+            else {
+                this.mSequenceTask = new TaskList_1.TaskList(executionMode);
+                this.mSequenceTask.addTask(task);
+                this.mSceneTask.addTask(this.mSequenceTask);
+            }
+        }
         return this;
     };
     Scene.prototype.onUpdate = function () {

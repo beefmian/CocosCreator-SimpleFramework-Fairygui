@@ -39,10 +39,14 @@ var TimeDelay = /** @class */ (function (_super) {
     /**
      * 添加一个每帧回调
      */
-    TimeDelay.prototype.AddUpdate = function (callback, thisObj, callbackParam) {
-        if (callbackParam === void 0) { callbackParam = null; }
+    TimeDelay.prototype.addUpdate = function (callback, thisObj) {
+        var callbackParam = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            callbackParam[_i - 2] = arguments[_i];
+        }
+        var _a;
         if (!this.mUpdateListener.has(callback, thisObj)) {
-            this.mUpdateListener.add(callback, thisObj, callbackParam);
+            (_a = this.mUpdateListener).add.apply(_a, [callback, thisObj].concat(callbackParam));
         }
         else {
             console.warn("repeat add  update");
@@ -51,12 +55,12 @@ var TimeDelay = /** @class */ (function (_super) {
     /**
      * 移除一个每帧回调
      */
-    TimeDelay.prototype.RemoveUpdate = function (callback, thisObj) {
+    TimeDelay.prototype.removeUpdate = function (callback, thisObj) {
         if (this.mUpdateListener.has(callback, thisObj)) {
             this.mUpdateListener.remove(callback, thisObj);
         }
     };
-    TimeDelay.prototype.GetFromPool = function () {
+    TimeDelay.prototype.getFromPool = function () {
         var t;
         if (this.pool.length > 0) {
             t = this.pool.pop();
@@ -65,13 +69,13 @@ var TimeDelay = /** @class */ (function (_super) {
             t = new TimeDelayData();
         return t;
     };
-    TimeDelay.prototype.ReturnToPool = function (t) {
+    TimeDelay.prototype.returnToPool = function (t) {
         t.set(0, 0, null, null, null);
         t.elapsed = 0;
         t.deleted = false;
         this.pool.push(t);
     };
-    TimeDelay.prototype.Exists = function (callback, thisObj) {
+    TimeDelay.prototype.exists = function (callback, thisObj) {
         var t = this.toAdd.find(function (value, index, obj) {
             return value.callback == callback && value.thisObj == thisObj;
         });
@@ -86,8 +90,11 @@ var TimeDelay = /** @class */ (function (_super) {
         }
         return false;
     };
-    TimeDelay.prototype.Add = function (interval, repeat, callback, thisObj, callbackParam) {
-        if (callbackParam === void 0) { callbackParam = null; }
+    TimeDelay.prototype.add = function (interval, repeat, callback, thisObj) {
+        var callbackParam = [];
+        for (var _i = 4; _i < arguments.length; _i++) {
+            callbackParam[_i - 4] = arguments[_i];
+        }
         var t;
         t = this.items.find(function (value, index, obj) {
             return value.callback == callback && value.thisObj == thisObj;
@@ -98,10 +105,10 @@ var TimeDelay = /** @class */ (function (_super) {
             });
         }
         if (t == null) {
-            t = this.GetFromPool();
+            t = this.getFromPool();
             this.toAdd.push(t);
         }
-        t.set(interval, repeat, callback, thisObj, callbackParam);
+        t.set.apply(t, [interval, repeat, callback, thisObj].concat(callbackParam));
         t.deleted = false;
         t.elapsed = 0;
     };
@@ -118,7 +125,7 @@ var TimeDelay = /** @class */ (function (_super) {
         });
         if (t != null) {
             this.toAdd.splice(findindex, 1);
-            this.ReturnToPool(t);
+            this.returnToPool(t);
         }
         t = this.items.find(function (value, index, obj) { return value.callback == callback && value.thisObj == thisObj; });
         if (t != null)
@@ -128,6 +135,7 @@ var TimeDelay = /** @class */ (function (_super) {
         this.lastTime = Date.now();
     };
     TimeDelay.prototype.update = function (dt) {
+        var _a;
         if (this.mUpdateListener != null) {
             this.mUpdateListener.run();
         }
@@ -154,7 +162,7 @@ var TimeDelay = /** @class */ (function (_super) {
             this.repeat = t.repeat;
             if (t.callback != null) {
                 try {
-                    t.callback.call(t.thisObj, t.param);
+                    (_a = t.callback).call.apply(_a, [t.thisObj].concat(t.param));
                 }
                 catch (error) {
                     t.deleted = true;
@@ -167,7 +175,7 @@ var TimeDelay = /** @class */ (function (_super) {
             var index_1 = this.items.indexOf(t_1);
             if (t_1.deleted && index_1 != -1) {
                 this.items.splice(index_1, 1);
-                this.ReturnToPool(t_1);
+                this.returnToPool(t_1);
             }
             len--;
         }
@@ -190,7 +198,11 @@ exports.TimeDelay = TimeDelay;
 var TimeDelayData = /** @class */ (function () {
     function TimeDelayData() {
     }
-    TimeDelayData.prototype.set = function (interval, repeat, callback, thisObj, param) {
+    TimeDelayData.prototype.set = function (interval, repeat, callback, thisObj) {
+        var param = [];
+        for (var _i = 4; _i < arguments.length; _i++) {
+            param[_i - 4] = arguments[_i];
+        }
         this.interval = interval;
         this.repeat = repeat;
         this.callback = callback;

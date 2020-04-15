@@ -16,7 +16,7 @@ export class EventTest {
     }
 
     static testSend() {
-        YK.TimeDelay.instance.Add(1, 0, () => {
+        YK.TimeDelay.instance.add(1, 0, () => {
             let ev = YK.Event.create(CustomizeEvent, CustomizeEvent.testId);
             this.eventDis.dispatchEvent(ev);
         }, this);

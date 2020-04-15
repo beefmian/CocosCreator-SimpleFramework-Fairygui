@@ -21,9 +21,9 @@ export class TimeDelay extends cc.Component {
     /**
      * 添加一个每帧回调
      */
-    public AddUpdate(callback: Function, thisObj: any, callbackParam: any = null) {
+    public addUpdate(callback: Function, thisObj: any, ...callbackParam: any) {
         if (!this.mUpdateListener.has(callback, thisObj)) {
-            this.mUpdateListener.add(callback, thisObj, callbackParam);
+            this.mUpdateListener.add(callback, thisObj, ...callbackParam);
         } else {
             console.warn("repeat add  update")
         }
@@ -31,7 +31,7 @@ export class TimeDelay extends cc.Component {
     /**
      * 移除一个每帧回调
      */
-    public RemoveUpdate(callback: Function, thisObj: any) {
+    public removeUpdate(callback: Function, thisObj: any) {
         if (this.mUpdateListener.has(callback, thisObj)) {
             this.mUpdateListener.remove(callback, thisObj);
         }
@@ -47,7 +47,7 @@ export class TimeDelay extends cc.Component {
     private toAdd: Array<TimeDelayData> = new Array<TimeDelayData>()
     private toRemove: Array<TimeDelayData> = new Array<TimeDelayData>()
     private pool: Array<TimeDelayData> = new Array<TimeDelayData>()
-    private GetFromPool(): TimeDelayData {
+    private getFromPool(): TimeDelayData {
         let t: TimeDelayData;
         if (this.pool.length > 0) {
             t = this.pool.pop()
@@ -57,7 +57,7 @@ export class TimeDelay extends cc.Component {
         return t;
     }
 
-    private ReturnToPool(t: TimeDelayData) {
+    private returnToPool(t: TimeDelayData) {
         t.set(0, 0, null, null, null)
         t.elapsed = 0
         t.deleted = false
@@ -65,7 +65,7 @@ export class TimeDelay extends cc.Component {
     }
 
 
-    public Exists(callback: TimerCallback, thisObj: any) {
+    public exists(callback: TimerCallback, thisObj: any) {
         let t = this.toAdd.find((value: TimeDelayData, index: number, obj: Array<TimeDelayData>) => {
             return value.callback == callback && value.thisObj == thisObj
         })
@@ -82,7 +82,7 @@ export class TimeDelay extends cc.Component {
         return false
     }
 
-    public Add(interval: number, repeat: number, callback: TimerCallback, thisObj: any, callbackParam: any = null) {
+    public add(interval: number, repeat: number, callback: TimerCallback, thisObj: any, ...callbackParam: any) {
         let t: TimeDelayData;
         t = this.items.find((value: TimeDelayData, index: number, obj: Array<TimeDelayData>) => {
             return value.callback == callback && value.thisObj == thisObj
@@ -95,11 +95,11 @@ export class TimeDelay extends cc.Component {
         }
 
         if (t == null) {
-            t = this.GetFromPool()
+            t = this.getFromPool()
             this.toAdd.push(t);
         }
 
-        t.set(interval, repeat, callback, thisObj, callbackParam)
+        t.set(interval, repeat, callback, thisObj, ...callbackParam)
         t.deleted = false
         t.elapsed = 0
     }
@@ -117,7 +117,7 @@ export class TimeDelay extends cc.Component {
         })
         if (t != null) {
             this.toAdd.splice(findindex, 1)
-            this.ReturnToPool(t)
+            this.returnToPool(t)
         }
 
         t = this.items.find((value: TimeDelayData, index: number, obj: Array<TimeDelayData>) => { return value.callback == callback && value.thisObj == thisObj })
@@ -163,7 +163,7 @@ export class TimeDelay extends cc.Component {
             this.repeat = t.repeat
             if (t.callback != null) {
                 try {
-                    t.callback.call(t.thisObj, t.param)
+                    t.callback.call(t.thisObj, ...t.param)
                 } catch (error) {
                     t.deleted = true
                 }
@@ -175,7 +175,7 @@ export class TimeDelay extends cc.Component {
             let index = this.items.indexOf(t)
             if (t.deleted && index != -1) {
                 this.items.splice(index, 1)
-                this.ReturnToPool(t)
+                this.returnToPool(t)
             }
             len--
         }
@@ -192,13 +192,13 @@ export class TimeDelay extends cc.Component {
 export class TimeDelayData {
     public repeat: number
     public interval: number
-    public param: any
+    public param: any[]
     public callback: TimerCallback
     public thisObj: any
     public deleted: boolean
     public elapsed: number
 
-    public set(interval: number, repeat: number, callback: TimerCallback, thisObj: any, param: any): void {
+    public set(interval: number, repeat: number, callback: TimerCallback, thisObj: any, ...param: any): void {
         this.interval = interval
         this.repeat = repeat
         this.callback = callback
@@ -207,4 +207,4 @@ export class TimeDelayData {
     }
 }
 
-export type TimerCallback = (param: any) => void
+export type TimerCallback = (...param: any) => void

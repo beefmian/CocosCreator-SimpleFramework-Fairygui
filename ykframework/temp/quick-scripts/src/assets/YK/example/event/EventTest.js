@@ -18,14 +18,10 @@ var EventTest = /** @class */ (function () {
     };
     EventTest.testSend = function () {
         var _this = this;
-        YK.TimeDelay.instance.Add(1, 0, function () {
+        YK.TimeDelay.instance.add(1, 0, function () {
             var ev = YK.Event.create(CustomizeEvent, CustomizeEvent.testId);
             _this.eventDis.dispatchEvent(ev);
         }, this);
-        // Laya.timer.loop(1000, this, () => {
-        //     let ev = YK.Event.create(CustomizeEvent, CustomizeEvent.testId);
-        //     this.eventDis.dispatchEvent(ev);
-        // });
     };
     EventTest.testListener1 = function (ev) {
         console.log("testListener1", ev);
